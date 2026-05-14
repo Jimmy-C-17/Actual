@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUI } from '../contexts/UIContext.jsx';
 import Sidebar from './Sidebar.jsx';
+import MapaRutas from './MapaRutas.jsx';
 
 const Rutas = () => {
   const navigate = useNavigate();
-  const { sidebarVisible, toggleSidebar, sindicatoName } = useUI();
+  const { sidebarVisible, toggleSidebar, sindicatoName, showToast } = useUI();
   const [rutasCatalogo, setRutasCatalogo] = useState([]);
   const [hojasRuta, setHojasRuta] = useState([]);
   const [choferes, setChoferes] = useState([]);
@@ -17,6 +18,8 @@ const Rutas = () => {
     nombre: '',
     activa: true
   });
+  const [routePoints, setRoutePoints] = useState([]);
+  const [editingRouteMode, setEditingRouteMode] = useState(false);
 
   function cargarDatosDinamicos() {
     fetch('http://127.0.0.1:8000/api/rutas-catalogo/')
@@ -51,6 +54,16 @@ const Rutas = () => {
   useEffect(() => {
     cargarDatosDinamicos();
   }, []);
+
+  useEffect(() => {
+    if (rutaSeleccionada) {
+      setRoutePoints(Array.isArray(rutaSeleccionada.coordenadas) ? rutaSeleccionada.coordenadas : []);
+      setEditingRouteMode(false);
+    } else {
+      setRoutePoints([]);
+      setEditingRouteMode(false);
+    }
+  }, [rutaSeleccionada]);
   const rutasActivas = rutasCatalogo.filter(r => r.activa);
   const rutasInactivas = rutasCatalogo.filter(r => !r.activa);
   const hojasDeRutaSeleccionada = rutaSeleccionada 
@@ -60,6 +73,45 @@ const Rutas = () => {
   const getNombreChofer = (choferId) => {
     const chofer = choferes.find(c => c.id === choferId);
     return chofer ? chofer.nombre_completo : 'Sin asignar';
+  };
+
+  const handleAddPoint = (point) => {
+    setRoutePoints((prev) => [...prev, point]);
+  };
+
+  const handleToggleRouteEdit = () => {
+    if (!rutaSeleccionada) return showToast('Selecciona una ruta primero para editarla.');
+    setEditingRouteMode((prev) => !prev);
+  };
+
+  const handleClearRoutePoints = () => {
+    setRoutePoints([]);
+  };
+
+  const handleSaveRoutePoints = async () => {
+    if (!rutaSeleccionada) return showToast('Selecciona una ruta primero.');
+    if (routePoints.length === 0) return showToast('Agrega al menos un punto en el mapa antes de guardar.');
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/rutas-catalogo/${rutaSeleccionada.id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coordenadas: routePoints }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al guardar las coordenadas de la ruta.');
+      }
+
+      const updatedRoute = await response.json();
+      setRutaSeleccionada(updatedRoute);
+      setRutasCatalogo((prev) => prev.map((ruta) => (ruta.id === updatedRoute.id ? updatedRoute : ruta)));
+      setEditingRouteMode(false);
+      showToast('Recorrido guardado correctamente.', 'success');
+    } catch (error) {
+      console.error(error);
+      showToast('No se pudo guardar el recorrido. Revisa la conexión al servidor.', 'danger');
+    }
   };
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -149,30 +201,17 @@ const Rutas = () => {
       <Sidebar />
 
       <main className="app-main">
-        <div className="page-header">
-          <div>
-            <p className="page-badge">📍</p>
-            <h1 className="page-title">Gestión de Rutas</h1>
-            <p className="page-subtitle">Crea, edita y administra rutas con una vista limpia y orientada a la acción.</p>
-          </div>
-          <button className="sidebar-control" onClick={toggleSidebar}>
-            {sidebarVisible ? 'Ocultar menú' : 'Mostrar menú'}
-          </button>
-        </div>
-        <h2 className="mb-4 fw-bold text-secondary">📍 Gestión de Rutas</h2>
+        <h2 className="mb-4 fw-bold text-secondary">Gestión de Rutas</h2>
         {rutaError && (
           <div className="alert alert-warning py-2" role="alert">
             {rutaError}
           </div>
         )}
-
-        <div className="row g-4">
-          
+        <div className="row g-4"> 
           {/* ================= COLUMNA IZQUIERDA ================= */}
           <div className="col-lg-5">
             <div className="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
-              <div className="row g-0">
-                
+              <div className="row g-0">               
                 {/* LISTA RUTAS ACTIVAS */}
                 <div className="col-6 p-0 border-end">
                   <div className="bg-secondary text-white text-center py-2 fw-bold">Rutas Activas</div>
@@ -190,7 +229,6 @@ const Rutas = () => {
                     {rutasActivas.length === 0 && <li className="list-group-item border-0 text-muted small text-center mt-3">Sin rutas activas</li>}
                   </ul>
                 </div>
-
                 {/* LISTA RUTAS INACTIVAS (BLOQUEADAS) */}
                 <div className="col-6 p-0">
                   <div className="bg-secondary text-white text-center py-2 fw-bold" style={{ opacity: 0.8 }}>Rutas Inactivas</div>
@@ -208,10 +246,8 @@ const Rutas = () => {
                     {rutasInactivas.length === 0 && <li className="list-group-item border-0 bg-transparent text-muted small text-center mt-3">Sin rutas bloqueadas</li>}
                   </ul>
                 </div>
-
               </div>
             </div>
-
             <div className="d-flex gap-2">
               <button className="btn btn-dark shadow-sm flex-grow-1" style={{ backgroundColor: '#6c757d', border: 'none' }} onClick={abrirModalCrear}>
                 + Añadir
@@ -224,23 +260,54 @@ const Rutas = () => {
               </button>
             </div>
           </div>
-
           {/* ================= COLUMNA DERECHA ================= */}
           <div className="col-lg-7 d-flex flex-column gap-4">
-            
-            {/* Mapa Placeholder */}
-            <div className="card shadow-sm border-0 rounded-4 d-flex align-items-center justify-content-center bg-white position-relative" style={{ height: '200px' }}>
-              <div className="text-center text-muted">
-                <span style={{ fontSize: '2rem' }}>🗺️</span>
-                <p className="mb-0 mt-2 fw-bold">
-                  {rutaSeleccionada ? `Ruta seleccionada: ${rutaSeleccionada.nombre}` : 'Selecciona una ruta'}
-                </p>
-                {rutaSeleccionada && !rutaSeleccionada.activa && (
-                  <span className="badge bg-danger mt-2">🚧 Esta ruta está actualmente bloqueada/inactiva</span>
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+              <div className="text-secondary small">
+                {rutaSeleccionada
+                  ? editingRouteMode
+                    ? 'Haz clic en el mapa para añadir puntos de ruta. Guarda cuando termines.'
+                    : 'Pulsa "Editar recorrido" para definir el camino desde el inicio.'
+                  : 'Selecciona una ruta para empezar a editarla.'}
+              </div>
+              <div className="btn-group">
+                <button
+                  className={`btn ${editingRouteMode ? 'btn-outline-danger' : 'btn-outline-primary'}`}
+                  onClick={handleToggleRouteEdit}
+                  disabled={!rutaSeleccionada}
+                >
+                  {editingRouteMode ? 'Cancelar edición' : 'Editar recorrido'}
+                </button>
+                {editingRouteMode && (
+                  <>
+                    <button
+                      className="btn btn-outline-success"
+                      onClick={handleSaveRoutePoints}
+                      disabled={routePoints.length === 0}
+                    >
+                      Guardar recorrido
+                    </button>
+                    <button
+                      className="btn btn-outline-secondary"
+                      onClick={handleClearRoutePoints}
+                    >
+                      Limpiar
+                    </button>
+                  </>
                 )}
               </div>
             </div>
-
+            <div className="card shadow-sm border-0 rounded-4 overflow-hidden" style={{ minHeight: '200px' }}>
+              <div className="card-body p-0">
+                <MapaRutas
+                  rutaSeleccionada={rutaSeleccionada || { nombre: 'Maica' }}
+                  points={routePoints}
+                  editable={editingRouteMode}
+                  onAddPoint={handleAddPoint}
+                  height="260px"
+                />
+              </div>
+            </div>
             {/* Tabla de Choferes en la Ruta Seleccionada */}
             <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
               <table className="table mb-0 text-center align-middle">
@@ -283,7 +350,6 @@ const Rutas = () => {
 
           </div>
         </div>
-
       {/* ================= MODAL CREAR / EDITAR RUTA ================= */}
       {showModal && (
         <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
@@ -309,7 +375,6 @@ const Rutas = () => {
                       autoFocus
                     />
                   </div>
-
                   <div className="form-check form-switch mt-4 bg-light p-3 rounded-3 d-flex align-items-center">
                     <input 
                       className="form-check-input ms-0 me-3 mt-0" 
@@ -339,10 +404,8 @@ const Rutas = () => {
           </div>
         </div>
       )}
-
       </main>
     </div>
   );
 };
-
 export default Rutas;

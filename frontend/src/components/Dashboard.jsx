@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUI } from '../contexts/UIContext.jsx';
 import Sidebar from './Sidebar.jsx';
+import MapaRutas from './MapaRutas.jsx';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -31,11 +32,8 @@ const Dashboard = () => {
 
         setChoferes(choferData);
 
-        const rutasActivasHoy = rutasData
-          .filter((ruta) => ruta.activa)
-          .map((ruta) => ruta.nombre || 'Ruta');
-
-        setActiveRoutes(rutasActivasHoy.slice(0, 6));
+        const rutasActivasHoy = rutasData.filter((ruta) => ruta.activa).slice(0, 6);
+        setActiveRoutes(rutasActivasHoy);
       } catch (err) {
         console.error(err);
         setError('Error al cargar los datos del panel.');
@@ -63,6 +61,7 @@ const Dashboard = () => {
 
   const activeDrivers = choferes.filter((chofer) => chofer.conectado).slice(0, 3);
   const inactiveDrivers = choferes.filter((chofer) => !chofer.conectado).slice(0, 3);
+  const rutaMapa = activeRoutes[0] || { nombre: 'Maica' };
 
   return (
     <div className="app-shell">
@@ -71,13 +70,9 @@ const Dashboard = () => {
       <main className="app-main">
         <div className="page-header">
           <div>
-            <p className="page-badge">🏠</p>
             <h1 className="page-title">Panel de Control</h1>
-            <p className="page-subtitle">Resumen rápido de rutas activas, choferes conectados y acceso a todas las secciones.</p>
+            <p className="page-subtitle">Resumen rápido de rutas activas, choferes conectados.</p>
           </div>
-          <button className="sidebar-control" onClick={toggleSidebar}>
-            {sidebarVisible ? 'Ocultar menú' : 'Mostrar menú'}
-          </button>
         </div>
 
         {loading ? (
@@ -92,8 +87,8 @@ const Dashboard = () => {
             <div className="row g-4">
               <div className="col-lg-8">
                 <div className="card shadow-sm h-100 border-0 rounded-4" style={{ minHeight: '300px' }}>
-                  <div className="card-body d-flex align-items-center justify-content-center bg-light rounded-4">
-                    <h5 className="text-muted">🗺️ Aquí integraremos Google Maps o Leaflet</h5>
+                  <div className="card-body p-0 rounded-4 overflow-hidden">
+                    <MapaRutas rutaSeleccionada={rutaMapa} height="330px" />
                   </div>
                 </div>
               </div>
@@ -107,8 +102,8 @@ const Dashboard = () => {
                     {activeRoutes.length === 0 ? (
                       <li className="list-group-item border-0 text-muted">No hay rutas activas hoy.</li>
                     ) : (
-                      activeRoutes.map((ruta, index) => (
-                        <li key={index} className="list-group-item border-0">{ruta}</li>
+                      activeRoutes.map((ruta) => (
+                        <li key={ruta.id} className="list-group-item border-0">{ruta.nombre}</li>
                       ))
                     )}
                   </ul>
@@ -149,9 +144,6 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="card-footer text-center bg-white border-0 rounded-bottom-4">
-                    <button className="btn btn-link text-muted fw-bold p-0" onClick={() => navigate('/choferes')}>
-                      Ver más
-                    </button>
                   </div>
                 </div>
               </div>

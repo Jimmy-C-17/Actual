@@ -178,21 +178,9 @@ const Choferes = () => {
       <Sidebar />
 
       <main className="app-main">
-        <div className="page-header">
-          <div>
-            <p className="page-badge">👨‍✈️</p>
-            <h1 className="page-title">Gestión de Choferes</h1>
-            <p className="page-subtitle">Administra el acceso, el estado y los detalles de cada chofer en una vista clara.</p>
-          </div>
-          <button className="sidebar-control" onClick={toggleSidebar}>
-            {sidebarVisible ? 'Ocultar menú' : 'Mostrar menú'}
-          </button>
-        </div>
-
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
-            <h2 className="m-0 fw-bold text-secondary">👨‍✈️ Gestión de Choferes</h2>
-            <p className="text-muted small mb-0">Administra choferes, estado y acceso desde aquí.</p>
+            <h2 className="m-0 fw-bold text-secondary">Gestión de Choferes</h2>
           </div>
 
           <div className="d-flex gap-3">

@@ -22,9 +22,6 @@ const Sidebar = () => {
           <span className="sidebar-brand-icon">🚍</span>
           {sidebarVisible && <span>{sindicatoName || 'Sindicato'}</span>}
         </div>
-        <button className="sidebar-toggle" onClick={toggleSidebar} aria-label="Colapsar menú">
-          {sidebarVisible ? '«' : '»'}
-        </button>
       </div>
 
       <nav className="nav-list" aria-label="Navegación principal">

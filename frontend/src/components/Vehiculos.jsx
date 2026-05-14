@@ -137,19 +137,8 @@ const Vehiculos = () => {
       <Sidebar />
 
       <main className="app-main">
-        <div className="page-header">
-          <div>
-            <p className="page-badge">🚗</p>
-            <h1 className="page-title">Gestión de Vehículos</h1>
-            <p className="page-subtitle">Administra el parque móvil con filtros, ediciones rápidas y un diseño más limpio.</p>
-          </div>
-          <button className="sidebar-control" onClick={toggleSidebar}>
-            {sidebarVisible ? 'Ocultar menú' : 'Mostrar menú'}
-          </button>
-        </div>
-
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="m-0 fw-bold text-secondary">🚗 Gestión de Vehículos</h2>
+          <h2 className="m-0 fw-bold text-secondary">Gestión de Vehículos</h2>
           <div className="d-flex gap-3">
             <input 
               type="text" 

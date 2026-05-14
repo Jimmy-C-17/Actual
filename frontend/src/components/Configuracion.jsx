@@ -142,22 +142,9 @@ const Configuracion = () => {
   return (
     <div className="app-shell">
       <Sidebar />
-
       <main className="app-main">
-        <div className="page-header">
-          <div>
-            <p className="page-badge">⚙️</p>
-            <h1 className="page-title">Configuración</h1>
-            <p className="page-subtitle">Actualiza datos del sindicato, administra cuentas y sincroniza tu aplicación fácilmente.</p>
-          </div>
-          <button className="sidebar-control" onClick={toggleSidebar}>
-            {sidebarVisible ? 'Ocultar menú' : 'Mostrar menú'}
-          </button>
-        </div>
-        <h2 className="mb-4 fw-bold text-secondary">⚙️ Configuración del Sistema</h2>
-
+        <h2 className="mb-4 fw-bold text-secondary">Configuración del Sistema</h2>
         <div className="row g-4">
-          
           {/* Menú de Configuración (Sub-sidebar) */}
           <div className="col-lg-3">
             <div className="card shadow-sm border-0 rounded-4 p-3 bg-white">

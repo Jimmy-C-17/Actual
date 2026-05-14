@@ -235,17 +235,7 @@ const Planificacion = () => {
       <Sidebar />
 
       <main className="app-main">
-        <div className="page-header">
-          <div>
-            <p className="page-badge">📅</p>
-            <h1 className="page-title">Planificación Semanal</h1>
-            <p className="page-subtitle">Genera una planificación moderna y visual para tus choferes y rutas activas.</p>
-          </div>
-          <button className="sidebar-control" onClick={toggleSidebar}>
-            {sidebarVisible ? 'Ocultar menú' : 'Mostrar menú'}
-          </button>
-        </div>
-        <h2 className="mb-4 fw-bold text-secondary">📅 Planificación Semanal de Rutas</h2>
+        <h2 className="mb-4 fw-bold text-secondary">Planificación Semanal de Rutas</h2>
         {rutaError && (
           <div className="alert alert-warning py-2" role="alert">
             {rutaError}
@@ -258,7 +248,7 @@ const Planificacion = () => {
           <div className="d-flex gap-3 overflow-auto pb-2">
             {grupos.map(grupo => (
               <div key={grupo.id} className="card shadow-sm border-0 rounded-4 px-4 py-3 bg-white" style={{ minWidth: '200px' }}>
-                <h5 className="fw-bold text-primary mb-1">🚌 {grupo.nombre}</h5>
+                <h5 className="fw-bold text-primary mb-1">{grupo.nombre}</h5>
                 <p className="text-muted small mb-2">{grupo.cantidad} Choferes asignados</p>
                 <div className="d-flex gap-2 mt-auto">
                   <button className="btn btn-sm btn-outline-secondary flex-grow-1" onClick={() => handleEditarGrupo(grupo)}>✏️ Editar</button>
@@ -277,7 +267,7 @@ const Planificacion = () => {
           {/* --- SECCIÓN 2: FORMULARIO GENERADOR --- */}
           <div className="col-lg-4">
             <div className="card shadow-sm border-0 rounded-4 p-4">
-              <h5 className="fw-bold text-dark mb-4">🤖 Motor de Generación</h5>
+              <h5 className="fw-bold text-dark mb-4">Motor de Generación</h5>
               
               <div className="mb-3">
                 <label className="form-label small fw-bold text-muted">Semana a planificar</label>

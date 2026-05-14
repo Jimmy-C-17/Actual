@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUI } from '../contexts/UIContext.jsx';
+import MapaRutas from './MapaRutas.jsx';
 
 const VistaChofer = () => {
   const navigate = useNavigate();
@@ -235,11 +236,7 @@ const VistaChofer = () => {
           </div>
           <div className="col-lg-8 col-md-7 d-flex flex-column gap-3">
             <div className="card shadow-sm border-0 rounded-4 flex-grow-1 bg-white overflow-hidden" style={{ minHeight: '300px' }}>
-              <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted p-4">
-                <span style={{ fontSize: '4rem' }}>🗺️</span>
-                <h5 className="mt-3 fw-bold">Navegación GPS</h5>
-                <p className="text-center small">El mapa mostrará la ruta en tiempo real hacia {destinoActual}.</p>
-              </div>
+              <MapaRutas rutaSeleccionada={currentRoute || { nombre: destinoActual || 'Maica' }} height="340px" />
             </div>
             {/* Botonera de Acción */}
             <div className="card shadow-sm border-0 rounded-4 p-3 bg-white">

@@ -13,6 +13,7 @@ class Grupo(models.Model):
 class Ruta(models.Model):
     nombre = models.CharField(max_length=100, unique=True, verbose_name="Destino/Ruta")
     activa = models.BooleanField(default=True, verbose_name="¿Ruta Disponible?")
+    coordenadas = models.JSONField(default=list, blank=True, null=True, verbose_name="Coordenadas de la ruta")
 
     def __str__(self):
         return self.nombre
