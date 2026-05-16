@@ -310,7 +310,7 @@ const Choferes = () => {
         </div>
       </main>
 
-      {/* ================= VENTANA EMERGENTE (MODAL OSCURO) ================= */}
+      {/* ================= VENTANA EMERGENTE ================= */}
       {showModal && (
         <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <div className="modal-dialog modal-dialog-centered">

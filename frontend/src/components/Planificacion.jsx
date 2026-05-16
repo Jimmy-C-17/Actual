@@ -6,16 +6,13 @@ import Sidebar from './Sidebar.jsx';
 const Planificacion = () => {
   const navigate = useNavigate();
   const { sidebarVisible, toggleSidebar, sindicatoName, showToast } = useUI();
-  
   const [choferesReales, setChoferesReales] = useState([]);
   const [grupos, setGrupos] = useState([]);
   const [rutasCatalogo, setRutasCatalogo] = useState([]);
-  const [rutaError, setRutaError] = useState(null);
-  
+  const [rutaError, setRutaError] = useState(null); 
   const rutasActivas = rutasCatalogo
     .filter(ruta => ruta.activa)
-    .map(ruta => ruta.nombre);
-    
+    .map(ruta => ruta.nombre);  
   const [modoSeleccion, setModoSeleccion] = useState('porGrupo');
   const [grupoSeleccionado, setGrupoSeleccionado] = useState('');
   const [choferesSeleccionados, setChoferesSeleccionados] = useState([]);
@@ -24,8 +21,6 @@ const Planificacion = () => {
   const [planificacionGenerada, setPlanificacionGenerada] = useState(null);
   const [diaActivo, setDiaActivo] = useState('Lunes');
   const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-
-  // Usar los toasts globales en lugar de alertas del navegador
 
   function cargarGrupos() {
     fetch('http://127.0.0.1:8000/api/grupos/')

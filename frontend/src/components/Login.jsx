@@ -60,7 +60,6 @@ const Login = () => {
     <div 
       className="container-fluid vh-100 d-flex align-items-center justify-content-center"
       style={{ 
-        // Fondo azul oscuro similar a la imagen
         background: 'radial-gradient(circle at center, #155bb5 0%, #0a3d7a 100%)',
       }}
     >
@@ -70,7 +69,7 @@ const Login = () => {
           maxWidth: '420px', 
           width: '100%', 
           borderRadius: '20px',
-          backgroundColor: '#2b2b2b', // Color oscuro de la tarjeta
+          backgroundColor: '#2b2b2b',
           border: 'none',
           color: '#ffffff'
         }}

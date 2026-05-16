@@ -62,8 +62,6 @@ const Dashboard = () => {
   const activeDrivers = choferes.filter((chofer) => chofer.conectado).slice(0, 3);
   const inactiveDrivers = choferes.filter((chofer) => !chofer.conectado).slice(0, 3);
   const rutaMapa = activeRoutes[0] || { nombre: 'Maica' };
-
-  // Variables derivadas para las tarjetas superiores (sin alterar estados)
   const totalRutasActivas = activeRoutes.length;
   const resumenRutas = activeRoutes.length > 0 ? activeRoutes.map(r => r.nombre).join(', ').substring(0, 30) + (activeRoutes.map(r => r.nombre).join(', ').length > 30 ? '...' : '') : 'Ninguna activa';
   const totalChoferesActivos = activeDrivers.length;

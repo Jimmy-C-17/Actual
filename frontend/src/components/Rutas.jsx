@@ -4,16 +4,13 @@ import { useUI } from '../contexts/UIContext.jsx';
 import Sidebar from './Sidebar.jsx';
 import MapaRutas from './MapaRutas.jsx';
 
-// Función auxiliar para iniciales
 const getInitials = (name) => {
   if (!name) return 'S/N';
   const parts = name.trim().split(' ');
   if (parts.length > 1) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
-  return name.substring(0, 2).toUpperCase();
-};
-
+  return name.substring(0, 2).toUpperCase();};
 const Rutas = () => {
   const navigate = useNavigate();
   const { sidebarVisible, toggleSidebar, sindicatoName, showToast } = useUI();
@@ -26,8 +23,7 @@ const Rutas = () => {
   const [editandoRutaId, setEditandoRutaId] = useState(null);
   const [formData, setFormData] = useState({
     nombre: '',
-    activa: true
-  });
+    activa: true});
   const [routePoints, setRoutePoints] = useState([]);
   const [editingRouteMode, setEditingRouteMode] = useState(false);
 

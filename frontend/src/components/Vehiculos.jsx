@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useUI } from '../contexts/UIContext.jsx';
 import Sidebar from './Sidebar.jsx';
 
-// Función auxiliar para obtener las iniciales del nombre
 const getInitials = (name) => {
   if (!name) return 'S/N';
   const parts = name.trim().split(' ');
@@ -99,7 +98,6 @@ const Vehiculos = () => {
     .then(() => {
       cargarDatos();
       setShowModal(false);
-      // Asegúrate de tener showToast definido o importado en tu proyecto
       if(typeof showToast === 'function') showToast(editandoId ? "¡Vehículo actualizado!" : "¡Vehículo guardado con éxito!");
     })
     .catch(error => {
