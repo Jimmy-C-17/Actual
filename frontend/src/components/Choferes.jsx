@@ -5,7 +5,7 @@ import Sidebar from './Sidebar.jsx';
 
 const Choferes = () => {
   const navigate = useNavigate();
-  const { sidebarVisible, toggleSidebar, sindicatoName } = useUI();
+  const { sidebarVisible, toggleSidebar, sindicatoName, showToast } = useUI();
   
   const [showModal, setShowModal] = useState(false);
   const [choferes, setChoferes] = useState([]); 
@@ -16,7 +16,7 @@ const Choferes = () => {
     nro_socio: '',
     celular: '',
     password: '', 
-    grupo: ''     
+    grupo: ''    
   });
 
   const [busqueda, setBusqueda] = useState('');
@@ -75,11 +75,11 @@ const Choferes = () => {
     const method = editandoId ? 'PUT' : 'POST';
 
     if (!editandoId && !formData.password) {
-        showToast("La contraseña es obligatoria para crear un nuevo chofer.");
+        showToast("La contraseña es obligatoria para crear un nuevo chofer.", 'warning');
         return;
     }
     if (!formData.grupo) {
-        showToast("Debes seleccionar un grupo para el chofer.");
+        showToast("Debes seleccionar un grupo para el chofer.", 'warning');
         return;
     }
     const datosAEnviar = { ...formData };
@@ -113,28 +113,26 @@ const Choferes = () => {
       cargarChoferes(); 
       setShowModal(false);
       if (!editandoId) {
-        showToast("¡Chofer guardado con éxito y usuario creado!\n\nSu usuario de acceso será mostrado en la tabla.");
+        showToast("Chofer guardado con éxito y usuario creado.", 'success');
       } else {
-        showToast("¡Chofer actualizado!");
+        showToast("Chofer actualizado correctamente.", 'success');
       }
     })
     .catch(error => {
         console.error("Error al guardar:", error);
-        showToast("Error al guardar el chofer. Revisa la consola o asegúrate de que el CI no esté duplicado.\nDetalles: " + error.message);
+        showToast("Error al guardar el chofer. Revisa la consola o el CI.", 'error');
     });
   };
 
   const handleEliminar = (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este chofer? Se eliminará también su acceso al sistema.")) {
-      fetch(`http://127.0.0.1:8000/api/choferes/${id}/`, {
-        method: 'DELETE',
-      })
-      .then(() => {
-        cargarChoferes();
-        showToast("Chofer eliminado.");
-      })
-      .catch(error => console.error("Error al eliminar:", error));
-    }
+    fetch(`http://127.0.0.1:8000/api/choferes/${id}/`, {
+      method: 'DELETE',
+    })
+    .then(() => {
+      cargarChoferes();
+      showToast("Chofer eliminado.", 'success');
+    })
+    .catch(error => console.error("Error al eliminar:", error));
   };
 
   const handleToggleEstado = (chofer) => {
@@ -156,7 +154,7 @@ const Choferes = () => {
     })
     .catch(error => {
       console.error('Error al cambiar estado:', error);
-      showToast('No se pudo habilitar/deshabilitar el chofer. Revisa la consola.');
+      showToast('No se pudo habilitar/deshabilitar el chofer. Revisa la consola.', 'error');
     });
   };
 
@@ -173,131 +171,197 @@ const Choferes = () => {
     return grupo ? grupo.nombre : 'Desconocido';
   };
 
+  // Función para obtener las iniciales del nombre
+  const getInitials = (name) => {
+    if (!name) return '';
+    const parts = name.trim().split(' ');
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
+
   return (
-    <div className="app-shell">
+    <div className="app-shell d-flex" style={{ backgroundColor: '#1a1c1e', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Sidebar />
 
-      <main className="app-main">
+      <main className="app-main flex-grow-1 p-4" style={{ backgroundColor: '#1a1c1e', marginLeft: sidebarVisible ? '240px' : '80px' }}>
+        
+        {/* ENCABEZADO Y BUSCADOR */}
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
-            <h2 className="m-0 fw-bold text-secondary">Gestión de Choferes</h2>
+            <h2 className="fw-bold text-white mb-0" style={{ fontSize: '1.8rem' }}>Gestión de choferes</h2>
           </div>
 
-          <div className="d-flex gap-3">
-            <input 
-              type="text" 
-              className="form-control shadow-sm border-0" 
-              placeholder="Buscar chofer..." 
-              style={{ minWidth: '250px' }} 
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
+          <div className="d-flex gap-3 align-items-center">
+            <div className="position-relative">
+              <span className="position-absolute" style={{ color: '#9aa0a6', left: '15px', top: '50%', transform: 'translateY(-50%)' }}>
+                <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="18" height="18">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                className="form-control rounded-pill px-5" 
+                placeholder="Buscar chofer..." 
+                style={{ minWidth: '250px', backgroundColor: '#2d3034', border: '1px solid #444', color: '#e8eaed' }} 
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+            </div>
 
             <button 
-              className="btn btn-dark shadow-sm text-nowrap" 
-              style={{ backgroundColor: '#6c757d', border: 'none' }}
+              className="btn rounded-pill px-4 text-white d-flex align-items-center gap-2" 
+              style={{ backgroundColor: 'transparent', border: '1px solid #5f6368' }}
               onClick={abrirModalCrear}
             >
-              + Agregar nuevo chofer
+              + Agregar chofer
             </button>
           </div>
         </div>
 
-        <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
-          <table className="table table-hover mb-0 text-center align-middle">
-            <thead className="table-secondary">
-              <tr><th className="py-3">Nombre y Apellido</th><th className="py-3">Carnet (CI)</th><th className="py-3">Usuario Acceso</th><th className="py-3">Numero de Socio</th><th className="py-3">Grupo</th><th className="py-3">Celular</th><th className="py-3">Habilitado</th><th className="py-3">Acciones</th></tr>
-            </thead>
-            <tbody>
-              {choferesFiltrados.length === 0 ? (
-                <tr><td colSpan="8" className="py-4 text-muted">No se encontraron choferes.</td></tr>
-              ) : (
-                choferesFiltrados.map((chofer) => (
-                  <tr key={chofer.id}>
-                    <td>{chofer.nombre_completo}</td>
-                    <td>{chofer.ci}</td>
-                    <td><code className="text-info">{chofer.usuario_acceso}</code></td>
-                    <td>{chofer.nro_socio}</td>
-                    <td><span className="badge bg-info text-dark">{obtenerNombreGrupo(chofer.grupo)}</span></td>
-                    <td>{chofer.celular}</td>
-                    <td className="text-center">
-                      <div className="form-check form-switch d-flex justify-content-center align-items-center">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          id={`estado-${chofer.id}`}
-                          checked={chofer.estado_activo}
-                          onChange={() => handleToggleEstado(chofer)}
-                        />
-                        <label className="form-check-label ms-2" htmlFor={`estado-${chofer.id}`}>{chofer.estado_activo ? 'Sí' : 'No'}</label>
-                      </div>
-                    </td>
-                    <td>
-                      <button className="btn btn-sm btn-outline-primary me-2 border-0" onClick={() => abrirModalEditar(chofer)} title="Editar">✏️</button>
-                      <button className="btn btn-sm btn-outline-danger border-0" onClick={() => handleEliminar(chofer.id)} title="Eliminar">🗑️</button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+        {/* TABLA DE DATOS */}
+        <div className="card shadow-sm border-0 rounded-4 overflow-hidden" style={{ backgroundColor: '#2d3034' }}>
+          <div className="table-responsive">
+            <table className="table table-borderless mb-0 text-start align-middle bg-transparent">
+              <thead style={{ borderBottom: '1px solid #444' }}>
+                <tr>
+                  <th className="py-3 px-4 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Nombre y apellido</th>
+                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Carnet (CI)</th>
+                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Usuario acceso</th>
+                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Nº socio</th>
+                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Grupo</th>
+                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Celular</th>
+                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Estado</th>
+                  <th className="py-3 fw-normal bg-transparent text-end pe-4">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {choferesFiltrados.length === 0 ? (
+                  <tr><td colSpan="8" className="py-4 text-center bg-transparent" style={{ color: '#9aa0a6' }}>No se encontraron choferes.</td></tr>
+                ) : (
+                  choferesFiltrados.map((chofer) => (
+                    <tr
+                    key={chofer.id}
+                    onClick={(e) => {
+                      if (!e.target.closest('button')) abrirModalEditar(chofer);
+                    }}
+                    style={{
+                      borderBottom: '1px solid #3a3d40',
+                      backgroundColor: chofer.id === editandoId ? '#212830' : 'transparent',
+                      cursor: 'pointer'
+                    }}
+                  >
+                      <td className="py-3 px-4 bg-transparent d-flex align-items-center" style={{ color: '#e8eaed' }}>
+                        <div className="rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold shadow-sm" style={{ width: '38px', height: '38px', backgroundColor: '#ffffff', color: '#002d5c', fontSize: '0.85rem' }}>
+                          {getInitials(chofer.nombre_completo)}
+                        </div>
+                        {chofer.nombre_completo}
+                      </td>
+                      <td className="py-3 bg-transparent" style={{ color: '#e8eaed' }}>{chofer.ci}</td>
+                      <td className="py-3 bg-transparent" style={{ color: '#669df6' }}>{chofer.usuario_acceso}</td>
+                      <td className="py-3 bg-transparent" style={{ color: '#e8eaed' }}>{chofer.nro_socio}</td>
+                      <td className="py-3 bg-transparent">
+                        <span className="badge rounded-pill text-dark px-3 py-2 fw-bold" style={{ backgroundColor: '#ffffff' }}>
+                          {obtenerNombreGrupo(chofer.grupo)}
+                        </span>
+                      </td>
+                      <td className="py-3 bg-transparent" style={{ color: '#e8eaed' }}>{chofer.celular}</td>
+                      <td className="py-3 bg-transparent">
+                        <div className="form-check form-switch d-flex align-items-center m-0">
+                          <input
+                            className="form-check-input shadow-none"
+                            type="checkbox"
+                            role="switch"
+                            checked={chofer.estado_activo}
+                            onChange={() => handleToggleEstado(chofer)}
+                            style={{ cursor: 'pointer', backgroundColor: chofer.estado_activo ? '#34a853' : '#5f6368', borderColor: chofer.estado_activo ? '#34a853' : '#5f6368', width: '2.5rem', height: '1.25rem' }}
+                          />
+                        </div>
+                      </td>
+                      <td className="py-3 bg-transparent text-end pe-4">
+                        <button 
+                          className="btn btn-sm me-2 border-0 d-inline-flex align-items-center justify-content-center" 
+                          onClick={() => abrirModalEditar(chofer)} 
+                          title="Editar" 
+                          style={{ background: 'none', color: '#f28b82', padding: '0.25rem' }}
+                        >
+                          <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="18" height="18">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                        <button 
+                          className="btn btn-sm border-0 d-inline-flex align-items-center justify-content-center" 
+                          onClick={() => handleEliminar(chofer.id)} 
+                          title="Eliminar" 
+                          style={{ background: 'none', color: '#9aa0a6', padding: '0.25rem' }}
+                        >
+                          <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="18" height="18">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
 
-      {/* ================= VENTANA EMERGENTE (MODAL) ================= */}
+      {/* ================= VENTANA EMERGENTE (MODAL OSCURO) ================= */}
       {showModal && (
-        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow-lg rounded-4">
-              <div className="modal-header border-0 pb-0">
-                <h5 className="modal-title fw-bold text-secondary">
+            <div className="modal-content border-0 shadow-lg rounded-4" style={{ backgroundColor: '#2d3034', color: '#e8eaed' }}>
+              <div className="modal-header border-bottom-0 pb-0">
+                <h5 className="modal-title fw-bold text-white">
                   {editandoId ? "Editar Chofer" : "Registrar Nuevo Chofer"}
                 </h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setShowModal(false)}></button>
               </div>
               <div className="modal-body">
                 <form>
                   <div className="mb-3">
-                    <label className="form-label small fw-bold text-muted">Nombre y Apellido</label>
-                    <input type="text" name="nombre_completo" value={formData.nombre_completo} onChange={handleChange} className="form-control bg-light border-0" placeholder="Ej: Juan Pérez" />
+                    <label className="form-label small fw-bold" style={{ color: '#9aa0a6' }}>Nombre y Apellido</label>
+                    <input type="text" name="nombre_completo" value={formData.nombre_completo} onChange={handleChange} className="form-control border-0" style={{ backgroundColor: '#1a1c1e', color: 'white' }} placeholder="Ej: Juan Pérez" />
                   </div>
                   
                   <div className="row">
                       <div className="col-md-6 mb-3">
-                        <label className="form-label small fw-bold text-muted">Carnet de Identidad</label>
-                        <input type="text" name="ci" value={formData.ci} onChange={handleChange} className="form-control bg-light border-0" placeholder="Ej: 1234567" disabled={editandoId ? true : false} title={editandoId ? "El CI no se puede editar porque es el usuario" : ""} />
-                        <small className="text-muted" style={{fontSize: '0.7em'}}>Será el usuario de acceso</small>
+                        <label className="form-label small fw-bold" style={{ color: '#9aa0a6' }}>Carnet de Identidad</label>
+                        <input type="text" name="ci" value={formData.ci} onChange={handleChange} className="form-control border-0" style={{ backgroundColor: '#1a1c1e', color: 'white' }} placeholder="Ej: 1234567" disabled={editandoId ? true : false} title={editandoId ? "El CI no se puede editar porque es el usuario" : ""} />
+                        <small style={{ color: '#9aa0a6', fontSize: '0.7em' }}>Será el usuario de acceso</small>
                       </div>
                       
-                      {/* ---  CAMPO DE CONTRASEÑA --- */}
                       <div className="col-md-6 mb-3">
-                        <label className="form-label small fw-bold text-muted">Contraseña de Acceso</label>
-                        <input type="text" name="password" value={formData.password} onChange={handleChange} className="form-control bg-light border-0" placeholder={editandoId ? "Dejar vacío para no cambiar" : "Ej: secreta123"} />
+                        <label className="form-label small fw-bold" style={{ color: '#9aa0a6' }}>Contraseña de Acceso</label>
+                        <input type="text" name="password" value={formData.password} onChange={handleChange} className="form-control border-0" style={{ backgroundColor: '#1a1c1e', color: 'white' }} placeholder={editandoId ? "Dejar vacío para no cambiar" : "Ej: secreta123"} />
                       </div>
                   </div>
 
                   <div className="row">
                       <div className="col-md-6 mb-3">
-                        <label className="form-label small fw-bold text-muted">Número de Socio</label> 
-                        <input type="text" name="nro_socio" value={formData.nro_socio} onChange={handleChange} className="form-control bg-light border-0" placeholder="Ej: 00125" />
+                        <label className="form-label small fw-bold" style={{ color: '#9aa0a6' }}>Número de Socio</label> 
+                        <input type="text" name="nro_socio" value={formData.nro_socio} onChange={handleChange} className="form-control border-0" style={{ backgroundColor: '#1a1c1e', color: 'white' }} placeholder="Ej: 00125" />
                       </div>
                       <div className="col-md-6 mb-3">
-                        <label className="form-label small fw-bold text-muted">Número de Celular</label>
-                        <input type="text" name="celular" value={formData.celular} onChange={handleChange} className="form-control bg-light border-0" placeholder="Ej: 77712345" />
+                        <label className="form-label small fw-bold" style={{ color: '#9aa0a6' }}>Número de Celular</label>
+                        <input type="text" name="celular" value={formData.celular} onChange={handleChange} className="form-control border-0" style={{ backgroundColor: '#1a1c1e', color: 'white' }} placeholder="Ej: 77712345" />
                       </div>
                   </div>
 
-                  {/* --- SELECTOR DE GRUPOS --- */}
                   <div className="mb-3">
-                      <label className="form-label small fw-bold text-muted">Asignar a Grupo (Para Turnos)</label>
+                      <label className="form-label small fw-bold" style={{ color: '#9aa0a6' }}>Asignar a Grupo</label>
                       <select 
                           name="grupo" 
                           value={formData.grupo} 
                           onChange={handleChange} 
-                          className="form-select bg-light border-0"
+                          className="form-select border-0"
+                          style={{ backgroundColor: '#1a1c1e', color: 'white' }}
                       >
-                          <option value="">-- Seleccione un Grupo --</option>
+                          <option value="" style={{ color: '#9aa0a6' }}>-- Seleccione un Grupo --</option>
                           {grupos.map(g => (
                               <option key={g.id} value={g.id}>{g.nombre}</option>
                           ))}
@@ -306,13 +370,14 @@ const Choferes = () => {
 
                 </form>
               </div>
-              <div className="modal-footer border-0 pt-0">
-                <button type="button" className="btn btn-light" onClick={() => setShowModal(false)}>Cancelar</button>
+              <div className="modal-footer border-top-0 pt-0">
+                <button type="button" className="btn rounded-pill px-4 text-white" style={{ border: '1px solid #5f6368', backgroundColor: 'transparent' }} onClick={() => setShowModal(false)}>Cancelar</button>
                 <button 
                   type="button" 
-                  className="btn btn-success px-4" 
+                  className="btn rounded-pill px-4" 
+                  style={{ backgroundColor: '#669df6', color: '#1a1c1e', fontWeight: 'bold' }}
                   onClick={handleGuardar}>
-                  {editandoId ? "Actualizar Chofer" : "Guardar y Crear Acceso"}
+                  {editandoId ? "Actualizar Chofer" : "Guardar Chofer"}
                 </button>
               </div>
             </div>

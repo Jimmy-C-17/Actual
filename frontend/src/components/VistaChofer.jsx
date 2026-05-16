@@ -149,7 +149,7 @@ const VistaChofer = () => {
 
   if (loading && !choferData) {
     return (
-      <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+      <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#1e1e1e' }}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando...</span>
         </div>
@@ -158,24 +158,42 @@ const VistaChofer = () => {
   }
 
   return (
-    <div className="container-fluid min-vh-100 p-0" style={{ backgroundColor: '#f4f6f9' }}>
+    <div className="container-fluid min-vh-100 p-0" style={{ backgroundColor: '#1a1c1e', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       
-      {/* ================= NAVBAR SUPERIOR ================= */}
-      <nav className="navbar navbar-dark bg-dark shadow-sm px-3 py-3">
+      {/* ================= NAVBAR SUPERIOR (AZUL OSCURO) ================= */}
+      <nav className="navbar px-4 py-3" style={{ backgroundColor: '#022d56' }}>
         <div className="d-flex align-items-center">
-          <span className="fs-3 me-2">🚐</span>
+          {/* Ícono de Bus Blanco con fondo celeste */}
+          <div className="me-3 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#5c9af0', borderRadius: '10px', width: '40px', height: '40px' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 14v4c0 .6.4 1 1 1h2"></path>
+              <circle cx="7" cy="17" r="2"></circle>
+              <path d="M9 17h6"></path>
+              <circle cx="17" cy="17" r="2"></circle>
+            </svg>
+          </div>
           <div>
-            <h5 className="mb-0 text-white fw-bold">Portal del Chofer</h5>
-            <small className="text-light opacity-75">{sindicatoName}</small>
+            <h5 className="mb-0 text-white fw-bold">Portal del chofer</h5>
+            <small style={{ color: '#a0bce0' }}>{sindicatoName}</small>
           </div>
         </div>
-        <div className="d-flex align-items-center gap-3">
+        
+        <div className="d-flex align-items-center gap-4">
           <div className="text-end d-none d-sm-block">
-            <p className="mb-0 text-white fw-bold">{userName || choferData?.nombre_completo || 'Chofer'}</p>
-            <small className="text-success">🟢 Conectado</small>
+            <p className="mb-0 text-white fw-bold" style={{ fontSize: '0.95rem' }}>{userName || choferData?.nombre_completo || 'Chofer'}</p>
+            <small style={{ color: '#4ade80', fontSize: '0.8rem' }}>● Conectado</small>
           </div>
-          <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>
-            🚪 Salir
+          <button 
+            className="btn btn-outline-light btn-sm d-flex align-items-center gap-2 rounded-pill px-3 py-1" 
+            onClick={handleLogout}
+            style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff', backgroundColor: 'transparent' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Salir
           </button>
         </div>
       </nav>
@@ -184,46 +202,76 @@ const VistaChofer = () => {
       <div className="p-3 p-md-4">
         <div className="row g-4">
           
-          {/* COLUMNA IZQUIERDA: Información del Viaje */}
+          {/* COLUMNA IZQUIERDA */}
           <div className="col-lg-4 col-md-5 d-flex flex-column gap-3">
             
-            {/* Tarjeta de Estado Actual */}
-            <div className="card shadow-sm border-0 rounded-4 p-3 border-start border-primary border-4">
-              <h6 className="text-muted fw-bold mb-3">ESTADO ACTUAL</h6>
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <p className="mb-1 small">En ruta hacia:</p>
-                  <h3 className="fw-bold text-primary m-0">{destinoActual}</h3>
-                </div>
-                <span className="badge bg-success fs-6 px-3 py-2 rounded-pill shadow-sm">
-                  {choferData?.estado_activo ? 'Activo' : 'Inactivo'}
+            {/* Tarjeta 1: Estado Actual */}
+            <div className="card shadow-sm border-0 rounded-4 p-4" style={{ backgroundColor: '#2d3034' }}>
+              <h6 className="fw-bold mb-3" style={{ color: '#a0aab2', fontSize: '0.75rem', letterSpacing: '1px' }}>ESTADO ACTUAL</h6>
+              <div className="mb-4">
+                <p className="mb-1" style={{ color: '#c4c7c5', fontSize: '0.95rem' }}>En ruta hacia:</p>
+                <h3 className="fw-bold m-0" style={{ color: '#669df6' }}>{destinoActual}</h3>
+              </div>
+              <div>
+                <span 
+                  className="badge px-3 py-2 rounded-pill" 
+                  style={{ 
+                    backgroundColor: '#e6f4ea', 
+                    color: '#137333',
+                    fontSize: '0.85rem',
+                    fontWeight: '600'
+                  }}
+                >
+                  ● {choferData?.estado_activo ? 'Activo' : 'Inactivo'}
                 </span>
               </div>
             </div>
 
-            {/* Tarjeta de Ruta Asignada */}
-            <div className="card shadow-sm border-0 rounded-4 p-3 flex-grow-1">
-              <h6 className="text-muted fw-bold mb-3">📍 RUTA ASIGNADA</h6>
-              <ul className="list-group list-group-flush">
+            {/* Tarjeta 2: Ruta Asignada */}
+            <div className="card shadow-sm border-0 rounded-4 p-4 flex-grow-1" style={{ backgroundColor: '#2d3034' }}>
+              <div className="d-flex align-items-center mb-3 gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a0aab2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <h6 className="fw-bold m-0" style={{ color: '#a0aab2', fontSize: '0.75rem', letterSpacing: '1px' }}>RUTA ASIGNADA</h6>
+              </div>
+              
+              <ul className="list-group list-group-flush bg-transparent">
                 {sortedRoutes.length === 0 ? (
-                  <li className="list-group-item border-0 px-0 py-2 text-muted">No hay rutas asignadas para hoy.</li>
+                  <li className="list-group-item border-0 px-0 py-2 bg-transparent" style={{ color: '#e8eaed' }}>
+                    No hay rutas asignadas para hoy.
+                  </li>
                 ) : (
                   sortedRoutes.map((route, index) => {
                     const completada = !!route.completada;
                     const esActual = route.id === currentRoute?.id && !route.completada;
 
                     return (
-                      <li key={index} className="list-group-item d-flex align-items-center border-0 px-0 py-2">
+                      <li key={index} className="list-group-item d-flex align-items-center border-0 px-0 py-2 bg-transparent">
                         <div className="me-3 text-center" style={{ width: '24px' }}>
                           {completada ? (
-                            <span className="text-success fs-5">✓</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34a853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M20 6L9 17l-5-5" />
+                            </svg>
                           ) : esActual ? (
-                            <span className="text-primary fs-5">📍</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#669df6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                              <circle cx="12" cy="10" r="3" />
+                            </svg>
                           ) : (
-                            <span className="text-muted opacity-50 fs-5">○</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5f6368" strokeWidth="2" strokeLinecap="round">
+                              <circle cx="12" cy="12" r="5" />
+                            </svg>
                           )}
                         </div>
-                        <span className={`fw-bold ${completada ? 'text-muted text-decoration-line-through' : esActual ? 'text-primary fs-5' : 'text-dark'}`}>
+                        <span 
+                          style={{ 
+                            fontWeight: esActual ? 'bold' : 'normal',
+                            color: completada ? '#5f6368' : esActual ? '#669df6' : '#e8eaed',
+                            textDecoration: completada ? 'line-through' : 'none'
+                          }}
+                        >
                           {formatRouteName(route)}
                         </span>
                       </li>
@@ -234,33 +282,74 @@ const VistaChofer = () => {
             </div>
 
           </div>
+
+          {/* COLUMNA DERECHA */}
           <div className="col-lg-8 col-md-7 d-flex flex-column gap-3">
-            <div className="card shadow-sm border-0 rounded-4 flex-grow-1 bg-white overflow-hidden" style={{ minHeight: '300px' }}>
+            
+            {/* Contenedor del Mapa */}
+            <div className="card shadow-sm border-0 rounded-4 flex-grow-1 overflow-hidden" style={{ backgroundColor: '#2d3034', minHeight: '300px' }}>
               <MapaRutas rutaSeleccionada={currentRoute || { nombre: destinoActual || 'Maica' }} height="340px" />
             </div>
-            {/* Botonera de Acción */}
-            <div className="card shadow-sm border-0 rounded-4 p-3 bg-white">
+
+            {/* Botonera de Acción (Gris Oscuro) */}
+            <div className="card shadow-sm border-0 rounded-4 p-3" style={{ backgroundColor: '#2d3034' }}>
               <div className="row g-2">
+                {/* Botón Iniciar Viaje */}
                 <div className="col-sm-4">
-                  <button className="btn btn-success w-100 fw-bold py-3 shadow-sm rounded-3" onClick={handleStartTrip} disabled={!currentRoute || loading}>
-                    ▶️ Iniciar Viaje
+                  <button 
+                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={handleStartTrip} 
+                    disabled={!currentRoute || loading}
+                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444' }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#383a3f'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = '#1f2023'}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Iniciar viaje
                   </button>
                 </div>
+
+                {/* Botón Finalizar Ruta */}
                 <div className="col-sm-4">
-                  <button className="btn btn-secondary w-100 fw-bold py-3 shadow-sm rounded-3" onClick={handleFinishRoute} disabled={!currentRoute || loading}>
-                    ⏹️ Finalizar Ruta
+                  <button 
+                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={handleFinishRoute} 
+                    disabled={!currentRoute || loading}
+                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444' }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#383a3f'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = '#1f2023'}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                    Finalizar ruta
                   </button>
                 </div>
+
+                {/* Botón Incidentes */}
                 <div className="col-sm-4">
-                  <button className="btn btn-warning w-100 fw-bold py-3 shadow-sm rounded-3 text-dark" onClick={handleReportIncident} disabled={!currentRoute || loading}>
-                    ⚠️ Incidentes
+                  <button 
+                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={handleReportIncident} 
+                    disabled={!currentRoute || loading}
+                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444' }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#383a3f'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = '#1f2023'}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                      <line x1="12" y1="9" x2="12" y2="13"></line>
+                      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Incidentes
                   </button>
                 </div>
               </div>
             </div>
 
           </div>
-
         </div>
       </div>
 
