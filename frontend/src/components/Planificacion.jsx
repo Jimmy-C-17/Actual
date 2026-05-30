@@ -233,7 +233,7 @@ const Planificacion = () => {
     <div className="app-shell d-flex" style={{ backgroundColor: '#1a1c1e', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Sidebar />
 
-      <main className="app-main flex-grow-1 p-4" style={{ backgroundColor: '#1a1c1e', marginLeft: sidebarVisible ? '240px' : '80px' }}>
+      <main className="app-main flex-grow-1 p-4" style={{ backgroundColor: '#1a1c1e',  }}>
         <h2 className="mb-4 fw-bold text-white" style={{ fontSize: '1.8rem' }}>Planificación Semanal de Rutas</h2>
         
         {rutaError && (

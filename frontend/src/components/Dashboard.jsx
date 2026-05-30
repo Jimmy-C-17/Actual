@@ -72,12 +72,12 @@ const Dashboard = () => {
     <div className="app-shell d-flex" style={{ backgroundColor: '#1a1c1e', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Sidebar />
 
-      <main className="app-main flex-grow-1 p-4" style={{ backgroundColor: '#1a1c1e', marginLeft: sidebarVisible ? '240px' : '80px' }}>
+      <main className="app-main flex-grow-1" style={{ backgroundColor: '#1a1c1e' }}>
         
         {/* ENCABEZADO */}
-        <div className="mb-4">
-          <h2 className="fw-bold text-white mb-1" style={{ fontSize: '1.8rem' }}>Panel de control</h2>
-          <p className="mb-0" style={{ color: '#a0aab2' }}>Resumen de rutas activas y choferes conectados</p>
+        <div className="mb-4" style={{ padding: '1rem' }}>
+          <h2 className="fw-bold text-white mb-1" style={{ fontSize: 'clamp(1.25rem, 5vw, 1.8rem)' }}>Panel de control</h2>
+          <p className="mb-0" style={{ color: '#a0aab2', fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)' }}>Resumen de rutas activas y choferes conectados</p>
         </div>
 
         {loading ? (
@@ -91,9 +91,9 @@ const Dashboard = () => {
             {error && <div className="alert alert-danger border-0 rounded-4 shadow-sm">{error}</div>}
             
             {/* ================= FILA 1: TARJETAS DE MÉTRICAS ================= */}
-            <div className="row g-3 mb-4">
+            <div className="row g-3 mb-4" style={{ padding: '0 1rem' }}>
               {/* Tarjeta 1: Rutas Activas */}
-              <div className="col-md-3 col-sm-6">
+              <div className="col-12 col-sm-6 col-md-3">
                 <div className="card h-100 border-0 rounded-4 p-3 shadow-sm" style={{ backgroundColor: '#2d3034' }}>
                   <h6 className="mb-2" style={{ color: '#a0aab2', fontSize: '0.85rem' }}>Rutas activas</h6>
                   <h2 className="fw-bold mb-2" style={{ color: '#669df6' }}>{totalRutasActivas}</h2>
@@ -102,7 +102,7 @@ const Dashboard = () => {
               </div>
 
               {/* Tarjeta 2: Choferes Activos */}
-              <div className="col-md-3 col-sm-6">
+              <div className="col-12 col-sm-6 col-md-3">
                 <div className="card h-100 border-0 rounded-4 p-3 shadow-sm" style={{ backgroundColor: '#2d3034' }}>
                   <h6 className="mb-2" style={{ color: '#a0aab2', fontSize: '0.85rem' }}>Choferes activos</h6>
                   <h2 className="fw-bold mb-2" style={{ color: '#34a853' }}>{totalChoferesActivos}</h2>
@@ -115,7 +115,7 @@ const Dashboard = () => {
               </div>
 
               {/* Tarjeta 3: Vehículos (Marcador) */}
-              <div className="col-md-3 col-sm-6">
+              <div className="col-12 col-sm-6 col-md-3">
                 <div className="card h-100 border-0 rounded-4 p-3 shadow-sm" style={{ backgroundColor: '#2d3034' }}>
                   <h6 className="mb-2" style={{ color: '#a0aab2', fontSize: '0.85rem' }}>Vehículos</h6>
                   <h2 className="fw-bold mb-2" style={{ color: '#669df6' }}>--</h2>
@@ -124,7 +124,7 @@ const Dashboard = () => {
               </div>
 
               {/* Tarjeta 4: Total Choferes */}
-              <div className="col-md-3 col-sm-6">
+              <div className="col-12 col-sm-6 col-md-3">
                 <div className="card h-100 border-0 rounded-4 p-3 shadow-sm" style={{ backgroundColor: '#2d3034' }}>
                   <h6 className="mb-2" style={{ color: '#a0aab2', fontSize: '0.85rem' }}>Total choferes</h6>
                   <h2 className="fw-bold mb-2 text-white">{totalChoferes}</h2>
@@ -134,9 +134,9 @@ const Dashboard = () => {
             </div>
 
             {/* ================= FILA 2: MAPA Y LISTA DE RUTAS ================= */}
-            <div className="row g-4 mb-4">
+            <div className="row g-4 mb-4" style={{ padding: '0 1rem' }}>
               {/* Columna Izquierda: Mapa */}
-              <div className="col-lg-8">
+              <div className="col-12 col-lg-8">
                 <div className="card shadow-sm h-100 border-0 rounded-4" style={{ backgroundColor: '#2d3034', minHeight: '300px' }}>
                   <div className="card-body p-0 rounded-4 overflow-hidden">
                     <MapaRutas rutaSeleccionada={rutaMapa} height="330px" />
@@ -145,7 +145,7 @@ const Dashboard = () => {
               </div>
 
               {/* Columna Derecha: Rutas Activas (Lista) */}
-              <div className="col-lg-4">
+              <div className="col-12 col-lg-4">
                 <div className="card shadow-sm h-100 border-0 rounded-4 p-3" style={{ backgroundColor: '#2d3034' }}>
                   <h6 className="fw-bold mb-3" style={{ color: '#e8eaed', fontSize: '0.9rem' }}>Rutas activas</h6>
                   <ul className="list-group list-group-flush bg-transparent border-0">
@@ -165,15 +165,15 @@ const Dashboard = () => {
             </div>
 
             {/* ================= FILA 3: LISTAS DE CHOFERES Y GRÁFICOS ================= */}
-            <div className="row g-4">
-              <div className="col-lg-8">
+            <div className="row g-4" style={{ padding: '0 1rem' }}>
+              <div className="col-12 col-lg-8">
                 <div className="card shadow-sm border-0 rounded-4 h-100 p-3" style={{ backgroundColor: '#2d3034' }}>
                   <h6 className="fw-bold mb-3" style={{ color: '#e8eaed', fontSize: '0.9rem' }}>Choferes Activos / Inactivos</h6>
                   <div className="card-body p-0">
                     <div className="row fs-6">
-                      
+
                       {/* Lista de Activos */}
-                      <div className="col-6 d-flex flex-column gap-3">
+                      <div className="col-12 col-sm-6 d-flex flex-column gap-3">
                         {activeDrivers.length === 0 ? (
                           <div className="text-muted" style={{ fontSize: '0.85rem' }}>No hay choferes activos.</div>
                         ) : (
@@ -187,7 +187,7 @@ const Dashboard = () => {
                       </div>
 
                       {/* Lista de Inactivos */}
-                      <div className="col-6 d-flex flex-column gap-3 border-start ps-4" style={{ borderColor: '#444 !important' }}>
+                      <div className="col-12 col-sm-6 d-flex flex-column gap-3 border-start ps-4" style={{ borderColor: '#444 !important', marginTop: '1rem' }}>
                         {inactiveDrivers.length === 0 ? (
                           <div className="text-muted" style={{ fontSize: '0.85rem' }}>No hay choferes inactivos.</div>
                         ) : (
@@ -205,7 +205,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="col-lg-4">
+              <div className="col-12 col-lg-4">
                 <div className="card shadow-sm h-100 border-0 rounded-4" style={{ backgroundColor: '#2d3034' }}>
                   <div className="card-body d-flex align-items-center justify-content-center">
                     <div className="text-center">

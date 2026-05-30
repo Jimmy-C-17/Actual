@@ -161,10 +161,10 @@ const VistaChofer = () => {
     <div className="container-fluid min-vh-100 p-0" style={{ backgroundColor: '#1a1c1e', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       
       {/* ================= NAVBAR SUPERIOR (AZUL OSCURO) ================= */}
-      <nav className="navbar px-4 py-3" style={{ backgroundColor: '#022d56' }}>
-        <div className="d-flex align-items-center">
+      <nav className="navbar px-4 py-3" style={{ backgroundColor: '#022d56', minHeight: 'auto' }}>
+        <div className="d-flex align-items-center gap-2" style={{ minWidth: 0, flex: 1 }}>
           {/* Ícono de Bus Blanco con fondo celeste */}
-          <div className="me-3 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#5c9af0', borderRadius: '10px', width: '40px', height: '40px' }}>
+          <div className="me-2 me-md-3 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#5c9af0', borderRadius: '10px', width: '40px', height: '40px', flexShrink: 0 }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 14v4c0 .6.4 1 1 1h2"></path>
               <circle cx="7" cy="17" r="2"></circle>
@@ -172,38 +172,38 @@ const VistaChofer = () => {
               <circle cx="17" cy="17" r="2"></circle>
             </svg>
           </div>
-          <div>
-            <h5 className="mb-0 text-white fw-bold">Portal del chofer</h5>
-            <small style={{ color: '#a0bce0' }}>{sindicatoName}</small>
+          <div style={{ minWidth: 0 }}>
+            <h5 className="mb-0 text-white fw-bold" style={{ fontSize: '1rem' }}>Portal del chofer</h5>
+            <small style={{ color: '#a0bce0', fontSize: '0.75rem', display: 'block' }}>{sindicatoName}</small>
           </div>
         </div>
-        
-        <div className="d-flex align-items-center gap-4">
-          <div className="text-end d-none d-sm-block">
+
+        <div className="d-flex align-items-center gap-2 gap-md-4" style={{ flexShrink: 0 }}>
+          <div className="text-end d-none d-md-block">
             <p className="mb-0 text-white fw-bold" style={{ fontSize: '0.95rem' }}>{userName || choferData?.nombre_completo || 'Chofer'}</p>
             <small style={{ color: '#4ade80', fontSize: '0.8rem' }}>● Conectado</small>
           </div>
-          <button 
-            className="btn btn-outline-light btn-sm d-flex align-items-center gap-2 rounded-pill px-3 py-1" 
+          <button
+            className="btn btn-outline-light btn-sm d-flex align-items-center gap-2 rounded-pill px-2 px-md-3 py-1"
             onClick={handleLogout}
-            style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff', backgroundColor: 'transparent' }}
+            style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff', backgroundColor: 'transparent', fontSize: '0.85rem' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
-            Salir
+            <span className="d-none d-sm-inline">Salir</span>
           </button>
         </div>
       </nav>
 
       {/* ================= MAIN CONTENT ================= */}
-      <div className="p-3 p-md-4">
-        <div className="row g-4">
-          
+      <div className="p-2 p-sm-3 p-md-4">
+        <div className="row g-3 g-md-4">
+
           {/* COLUMNA IZQUIERDA */}
-          <div className="col-lg-4 col-md-5 d-flex flex-column gap-3">
+          <div className="col-12 col-lg-4 d-flex flex-column gap-3">
             
             {/* Tarjeta 1: Estado Actual */}
             <div className="card shadow-sm border-0 rounded-4 p-4" style={{ backgroundColor: '#2d3034' }}>
@@ -284,7 +284,7 @@ const VistaChofer = () => {
           </div>
 
           {/* COLUMNA DERECHA */}
-          <div className="col-lg-8 col-md-7 d-flex flex-column gap-3">
+          <div className="col-12 col-lg-8 d-flex flex-column gap-3">
             
             {/* Contenedor del Mapa */}
             <div className="card shadow-sm border-0 rounded-4 flex-grow-1 overflow-hidden" style={{ backgroundColor: '#2d3034', minHeight: '300px' }}>
@@ -295,46 +295,48 @@ const VistaChofer = () => {
             <div className="card shadow-sm border-0 rounded-4 p-3" style={{ backgroundColor: '#2d3034' }}>
               <div className="row g-2">
                 {/* Botón Iniciar Viaje */}
-                <div className="col-sm-4">
-                  <button 
-                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={handleStartTrip} 
+                <div className="col-12 col-sm-4">
+                  <button
+                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                    onClick={handleStartTrip}
                     disabled={!currentRoute || loading}
-                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444' }}
+                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444', fontSize: '0.9rem' }}
                     onMouseOver={(e) => e.target.style.backgroundColor = '#383a3f'}
                     onMouseOut={(e) => e.target.style.backgroundColor = '#1f2023'}
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="5 3 19 12 5 21 5 3"></polygon>
                     </svg>
-                    Iniciar viaje
+                    <span className="d-none d-sm-inline">Iniciar viaje</span>
+                    <span className="d-sm-none">Iniciar</span>
                   </button>
                 </div>
 
                 {/* Botón Finalizar Ruta */}
-                <div className="col-sm-4">
-                  <button 
-                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={handleFinishRoute} 
+                <div className="col-12 col-sm-4">
+                  <button
+                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                    onClick={handleFinishRoute}
                     disabled={!currentRoute || loading}
-                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444' }}
+                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444', fontSize: '0.9rem' }}
                     onMouseOver={(e) => e.target.style.backgroundColor = '#383a3f'}
                     onMouseOut={(e) => e.target.style.backgroundColor = '#1f2023'}
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     </svg>
-                    Finalizar ruta
+                    <span className="d-none d-sm-inline">Finalizar ruta</span>
+                    <span className="d-sm-none">Finalizar</span>
                   </button>
                 </div>
 
                 {/* Botón Incidentes */}
-                <div className="col-sm-4">
-                  <button 
-                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={handleReportIncident} 
+                <div className="col-12 col-sm-4">
+                  <button
+                    className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                    onClick={handleReportIncident}
                     disabled={!currentRoute || loading}
-                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444' }}
+                    style={{ backgroundColor: '#1f2023', color: '#fff', border: '1px solid #444', fontSize: '0.9rem' }}
                     onMouseOver={(e) => e.target.style.backgroundColor = '#383a3f'}
                     onMouseOut={(e) => e.target.style.backgroundColor = '#1f2023'}
                   >
@@ -343,7 +345,8 @@ const VistaChofer = () => {
                       <line x1="12" y1="9" x2="12" y2="13"></line>
                       <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
-                    Incidentes
+                    <span className="d-none d-sm-inline">Incidentes</span>
+                    <span className="d-sm-none">Reporte</span>
                   </button>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUI } from '../contexts/UIContext.jsx';
+import { useState, useEffect } from 'react';
 
 const IconHome = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>;
 const IconUsers = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
@@ -30,19 +31,171 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-  const { sidebarVisible, sindicatoName, logout } = useUI();
+  const { sidebarVisible, toggleSidebar, sindicatoName, logout } = useUI();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 576;
+      setIsMobile(mobile);
+      if (!mobile && showMobileSidebar) {
+        setShowMobileSidebar(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [showMobileSidebar]);
+
   const colors = {
-    bgMain: '#042749', // Azul oscuro del fondo
-    bgActive: '#0b3b6a', // Azul más claro para el item seleccionado
-    textMuted: '#8ca1b9', // Gris azulado para items inactivos
-    textActive: '#ffffff', // Blanco para item activo
-    accent: '#3b82f6', // Borde azul brillante
-    border: '#11355a' // Líneas separadoras
+    bgMain: '#042749',
+    bgActive: '#0b3b6a',
+    textMuted: '#8ca1b9',
+    textActive: '#ffffff',
+    accent: '#3b82f6',
+    border: '#11355a'
   };
+
+  if (isMobile) {
+    return (
+      <>
+        {/* Mobile Topbar */}
+        <nav style={{
+          backgroundColor: colors.bgMain,
+          height: '80px',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 16px',
+          borderBottom: `1px solid ${colors.border}`,
+          zIndex: 1000
+        }}>
+          <button
+            onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }}>
+            {sindicatoName || 'Línea S'}
+          </span>
+          <button
+            onClick={() => {
+              logout();
+              navigate('/');
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: colors.textActive,
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </nav>
+
+        {/* Mobile Sidebar Overlay */}
+        {showMobileSidebar && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              zIndex: 999,
+              animation: 'fadeIn 0.2s ease'
+            }}
+            onClick={() => setShowMobileSidebar(false)}
+          />
+        )}
+
+        {/* Mobile Sidebar */}
+        <aside
+          style={{
+            backgroundColor: colors.bgMain,
+            width: '240px',
+            height: 'calc(100vh - 80px)',
+            position: 'fixed',
+            left: 0,
+            top: 80,
+            display: 'flex',
+            flexDirection: 'column',
+            transition: 'transform 0.3s ease',
+            transform: showMobileSidebar ? 'translateX(0)' : 'translateX(-100%)',
+            borderRight: `1px solid ${colors.border}`,
+            zIndex: 999,
+            overflow: 'auto'
+          }}
+        >
+          <nav style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '0' }}>
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    setShowMobileSidebar(false);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px',
+                    padding: '12px 20px',
+                    backgroundColor: isActive ? colors.bgActive : 'transparent',
+                    color: isActive ? colors.textActive : colors.textMuted,
+                    border: 'none',
+                    borderLeft: isActive ? `4px solid ${colors.accent}` : '4px solid transparent',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    width: '100%',
+                    transition: 'background-color 0.2s ease',
+                    fontWeight: isActive ? '600' : '500',
+                    fontSize: '15px'
+                  }}
+                >
+                  <div>{item.icon}</div>
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+      </>
+    );
+  }
+
   return (
-    <aside 
+    <aside
       style={{
         backgroundColor: colors.bgMain,
         width: sidebarVisible ? '240px' : '80px',

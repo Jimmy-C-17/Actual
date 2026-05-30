@@ -208,7 +208,7 @@ const Rutas = () => {
     <div className="app-shell" style={{ backgroundColor: '#1a1a1a', minHeight: '100vh', color: '#fff' }}>
       <Sidebar />
 
-      <main className="app-main p-4" style={{ marginLeft: sidebarVisible ? '240px' : '80px' }}>
+      <main className="app-main p-4" style={{  }}>
         <h2 className="mb-4 fw-bold text-white">Gestión de Rutas</h2>
         {rutaError && (
           <div className="alert border-0 py-2" style={{ backgroundColor: '#442a10', color: '#ffa85c' }} role="alert">

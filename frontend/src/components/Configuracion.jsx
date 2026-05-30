@@ -105,7 +105,7 @@ const Configuracion = () => {
   return (
     <div className="app-shell" style={{ backgroundColor: '#1a1a1a', minHeight: '100vh', color: '#fff' }}>
       <Sidebar />
-      <main className="app-main p-4" style={{ marginLeft: sidebarVisible ? '240px' : '80px' }}>
+      <main className="app-main p-4" style={{  }}>
         <h3 className="mb-4 fw-bold text-white">Configuración del sistema</h3>
         
         <div className="row g-4">

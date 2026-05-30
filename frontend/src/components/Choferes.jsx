@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useUI } from '../contexts/UIContext.jsx';
 import Sidebar from './Sidebar.jsx';
 
+const getInitials = (name) => {
+  if (!name) return 'S/N';
+  const parts = name.trim().split(' ');
+  if (parts.length > 1) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return name.substring(0, 2).toUpperCase();
+};
+
 const Choferes = () => {
   const navigate = useNavigate();
   const { sidebarVisible, toggleSidebar, sindicatoName, showToast } = useUI();
@@ -171,69 +180,60 @@ const Choferes = () => {
     return grupo ? grupo.nombre : 'Desconocido';
   };
 
-  // Función para obtener las iniciales del nombre
-  const getInitials = (name) => {
-    if (!name) return '';
-    const parts = name.trim().split(' ');
-    if (parts.length > 1) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
-
   return (
     <div className="app-shell d-flex" style={{ backgroundColor: '#1a1c1e', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Sidebar />
 
-      <main className="app-main flex-grow-1 p-4" style={{ backgroundColor: '#1a1c1e', marginLeft: sidebarVisible ? '240px' : '80px' }}>
-        
+      <main className="app-main flex-grow-1" style={{ backgroundColor: '#1a1c1e' }}>
+
         {/* ENCABEZADO Y BUSCADOR */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-md-center mb-4 gap-3" style={{ padding: '1rem' }}>
           <div>
-            <h2 className="fw-bold text-white mb-0" style={{ fontSize: '1.8rem' }}>Gestión de choferes</h2>
+            <h2 className="fw-bold text-white mb-0" style={{ fontSize: 'clamp(1.25rem, 5vw, 1.8rem)' }}>Gestión de choferes</h2>
           </div>
 
-          <div className="d-flex gap-3 align-items-center">
-            <div className="position-relative">
+          <div className="d-flex flex-column flex-sm-row gap-2 gap-md-3 align-items-stretch align-sm-center w-100 w-md-auto" style={{ minWidth: 0 }}>
+            <div className="position-relative flex-grow-1 flex-sm-grow-0" style={{ minWidth: '200px' }}>
               <span className="position-absolute" style={{ color: '#9aa0a6', left: '15px', top: '50%', transform: 'translateY(-50%)' }}>
                 <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="18" height="18">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </span>
-              <input 
-                type="text" 
-                className="form-control rounded-pill px-5" 
-                placeholder="Buscar chofer..." 
-                style={{ minWidth: '250px', backgroundColor: '#2d3034', border: '1px solid #444', color: '#e8eaed' }} 
+              <input
+                type="text"
+                className="form-control rounded-pill px-5 w-100"
+                placeholder="Buscar chofer..."
+                style={{ backgroundColor: '#2d3034', border: '1px solid #444', color: '#e8eaed', fontSize: 'clamp(0.85rem, 2vw, 1rem)' }}
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
             </div>
 
-            <button 
-              className="btn rounded-pill px-4 text-white d-flex align-items-center gap-2" 
-              style={{ backgroundColor: 'transparent', border: '1px solid #5f6368' }}
+            <button
+              className="btn rounded-pill px-3 px-md-4 py-2 text-white d-flex align-items-center justify-content-center gap-2 flex-shrink-0"
+              style={{ backgroundColor: 'transparent', border: '1px solid #5f6368', fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', whiteSpace: 'nowrap' }}
               onClick={abrirModalCrear}
             >
-              + Agregar chofer
+              <span className="d-none d-sm-inline">+ Agregar chofer</span>
+              <span className="d-sm-none">+ Agregar</span>
             </button>
           </div>
         </div>
 
         {/* TABLA DE DATOS */}
-        <div className="card shadow-sm border-0 rounded-4 overflow-hidden" style={{ backgroundColor: '#2d3034' }}>
+        <div className="card shadow-sm border-0 rounded-4 overflow-hidden" style={{ backgroundColor: '#2d3034', margin: '1rem', marginTop: 0 }}>
           <div className="table-responsive">
-            <table className="table table-borderless mb-0 text-start align-middle bg-transparent">
+            <table className="table table-borderless mb-0 text-start align-middle bg-transparent" style={{ fontSize: 'clamp(0.75rem, 2vw, 0.9rem)' }}>
               <thead style={{ borderBottom: '1px solid #444' }}>
                 <tr>
-                  <th className="py-3 px-4 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Nombre y apellido</th>
-                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Carnet (CI)</th>
-                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Usuario acceso</th>
-                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Nº socio</th>
-                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Grupo</th>
-                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Celular</th>
-                  <th className="py-3 fw-normal bg-transparent" style={{ fontSize: '0.85rem', color: '#9aa0a6' }}>Estado</th>
-                  <th className="py-3 fw-normal bg-transparent text-end pe-4">Acciones</th>
+                  <th className="py-2 py-md-3 px-2 px-md-4 fw-normal bg-transparent" style={{ color: '#9aa0a6' }}>Nombre</th>
+                  <th className="py-2 py-md-3 px-1 fw-normal bg-transparent d-none d-md-table-cell" style={{ color: '#9aa0a6' }}>CI</th>
+                  <th className="py-2 py-md-3 px-1 fw-normal bg-transparent d-none d-lg-table-cell" style={{ color: '#9aa0a6' }}>Usuario</th>
+                  <th className="py-2 py-md-3 px-1 fw-normal bg-transparent d-none d-lg-table-cell" style={{ color: '#9aa0a6' }}>Nº socio</th>
+                  <th className="py-2 py-md-3 px-1 fw-normal bg-transparent" style={{ color: '#9aa0a6' }}>Grupo</th>
+                  <th className="py-2 py-md-3 px-1 fw-normal bg-transparent d-none d-md-table-cell" style={{ color: '#9aa0a6' }}>Celular</th>
+                  <th className="py-2 py-md-3 px-1 fw-normal bg-transparent" style={{ color: '#9aa0a6' }}>Estado</th>
+                  <th className="py-2 py-md-3 px-2 fw-normal bg-transparent text-end" style={{ color: '#9aa0a6' }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -252,22 +252,22 @@ const Choferes = () => {
                       cursor: 'pointer'
                     }}
                   >
-                      <td className="py-3 px-4 bg-transparent d-flex align-items-center" style={{ color: '#e8eaed' }}>
-                        <div className="rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold shadow-sm" style={{ width: '38px', height: '38px', backgroundColor: '#ffffff', color: '#002d5c', fontSize: '0.85rem' }}>
+                      <td className="py-2 py-md-3 px-2 px-md-4 bg-transparent d-flex align-items-center" style={{ color: '#e8eaed', gap: '0.5rem', minWidth: 0 }}>
+                        <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold shadow-sm" style={{ width: '32px', height: '32px', backgroundColor: '#ffffff', color: '#002d5c', fontSize: '0.75rem' }}>
                           {getInitials(chofer.nombre_completo)}
                         </div>
-                        {chofer.nombre_completo}
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{chofer.nombre_completo}</span>
                       </td>
-                      <td className="py-3 bg-transparent" style={{ color: '#e8eaed' }}>{chofer.ci}</td>
-                      <td className="py-3 bg-transparent" style={{ color: '#669df6' }}>{chofer.usuario_acceso}</td>
-                      <td className="py-3 bg-transparent" style={{ color: '#e8eaed' }}>{chofer.nro_socio}</td>
-                      <td className="py-3 bg-transparent">
-                        <span className="badge rounded-pill text-dark px-3 py-2 fw-bold" style={{ backgroundColor: '#ffffff' }}>
+                      <td className="py-2 py-md-3 px-1 bg-transparent d-none d-md-table-cell" style={{ color: '#e8eaed' }}>{chofer.ci}</td>
+                      <td className="py-2 py-md-3 px-1 bg-transparent d-none d-lg-table-cell" style={{ color: '#669df6' }}>{chofer.usuario_acceso}</td>
+                      <td className="py-2 py-md-3 px-1 bg-transparent d-none d-lg-table-cell" style={{ color: '#e8eaed' }}>{chofer.nro_socio}</td>
+                      <td className="py-2 py-md-3 px-1 bg-transparent">
+                        <span className="badge rounded-pill text-dark px-2 py-1 fw-bold" style={{ backgroundColor: '#ffffff', fontSize: '0.7rem' }}>
                           {obtenerNombreGrupo(chofer.grupo)}
                         </span>
                       </td>
-                      <td className="py-3 bg-transparent" style={{ color: '#e8eaed' }}>{chofer.celular}</td>
-                      <td className="py-3 bg-transparent">
+                      <td className="py-2 py-md-3 px-1 bg-transparent d-none d-md-table-cell" style={{ color: '#e8eaed' }}>{chofer.celular}</td>
+                      <td className="py-2 py-md-3 px-1 bg-transparent">
                         <div className="form-check form-switch d-flex align-items-center m-0">
                           <input
                             className="form-check-input shadow-none"
@@ -275,28 +275,28 @@ const Choferes = () => {
                             role="switch"
                             checked={chofer.estado_activo}
                             onChange={() => handleToggleEstado(chofer)}
-                            style={{ cursor: 'pointer', backgroundColor: chofer.estado_activo ? '#34a853' : '#5f6368', borderColor: chofer.estado_activo ? '#34a853' : '#5f6368', width: '2.5rem', height: '1.25rem' }}
+                            style={{ cursor: 'pointer', backgroundColor: chofer.estado_activo ? '#34a853' : '#5f6368', borderColor: chofer.estado_activo ? '#34a853' : '#5f6368', width: '2rem', height: '1rem' }}
                           />
                         </div>
                       </td>
-                      <td className="py-3 bg-transparent text-end pe-4">
-                        <button 
-                          className="btn btn-sm me-2 border-0 d-inline-flex align-items-center justify-content-center" 
-                          onClick={() => abrirModalEditar(chofer)} 
-                          title="Editar" 
+                      <td className="py-2 py-md-3 px-2 bg-transparent text-end">
+                        <button
+                          className="btn btn-sm me-1 border-0 d-inline-flex align-items-center justify-content-center"
+                          onClick={() => abrirModalEditar(chofer)}
+                          title="Editar"
                           style={{ background: 'none', color: '#f28b82', padding: '0.25rem' }}
                         >
-                          <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="18" height="18">
+                          <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="16" height="16">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                           </svg>
                         </button>
-                        <button 
-                          className="btn btn-sm border-0 d-inline-flex align-items-center justify-content-center" 
-                          onClick={() => handleEliminar(chofer.id)} 
-                          title="Eliminar" 
+                        <button
+                          className="btn btn-sm border-0 d-inline-flex align-items-center justify-content-center"
+                          onClick={() => handleEliminar(chofer.id)}
+                          title="Eliminar"
                           style={{ background: 'none', color: '#9aa0a6', padding: '0.25rem' }}
                         >
-                          <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="18" height="18">
+                          <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="16" height="16">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
